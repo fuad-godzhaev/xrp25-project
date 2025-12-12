@@ -17,3 +17,6 @@ mono_crash.*.json
 
 .apk
 .app
+
+*.apk
+*.app
