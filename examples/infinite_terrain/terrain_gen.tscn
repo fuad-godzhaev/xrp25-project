@@ -1,0 +1,34 @@
+[gd_scene load_steps=5 format=3 uid="uid://boh8e6hop7l3w"]
+
+[ext_resource type="Script" uid="uid://dgapsfli6cvtl" path="res://examples/tank_game_3d/FPController.gd" id="2_rl0e7"]
+[ext_resource type="PackedScene" uid="uid://d2v5tptyj6j6i" path="res://examples/infinite_terrain/terrain_tile.tscn" id="3_vb03k"]
+[ext_resource type="Script" uid="uid://d0qwe0b8j1uai" path="res://examples/infinite_terrain/infinite_terrain.gd" id="4_c8kae"]
+
+[sub_resource type="Environment" id="Environment_g3xt2"]
+background_mode = 1
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.41
+fog_light_color = Color(0, 0, 0, 1)
+volumetric_fog_enabled = true
+
+[node name="terrain_gen" type="Node3D"]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 200, 5)
+script = ExtResource("2_rl0e7")
+speed = 100.0
+rot_speed = 180.0
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.474672, 0.880163, 0, -0.633669, 0.341738, 0.69403, 0.61086, -0.329437, 0.719946, 0, 11.0446, 0)
+light_energy = 0.904
+light_specular = 15.651
+
+[node name="infinite_terrain" type="Node3D" parent="." node_paths=PackedStringArray("player")]
+script = ExtResource("4_c8kae")
+tile_prefab = ExtResource("3_vb03k")
+player = NodePath("../Camera3D")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_g3xt2")

@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://d2v5tptyj6j6i"]
+
+[ext_resource type="Script" uid="uid://c4np6ee2bb1og" path="res://examples/infinite_terrain/terrain_tile.gd" id="1_d16af"]
+
+[node name="terrain_tile" type="Node3D"]
+script = ExtResource("1_d16af")
+low = 0.6
+high = 0.4
