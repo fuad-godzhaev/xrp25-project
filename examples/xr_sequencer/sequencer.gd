@@ -1,4 +1,4 @@
-extends Marker3D
+extends Node3D
 
 var samples:Array
 var players:Array

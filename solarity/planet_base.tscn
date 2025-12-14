@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://188s15j7sbd7"]
+
+[ext_resource type="Script" uid="uid://b663bpjsrn87a" path="res://solarity/planet_base.gd" id="1_cxhl0"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_xcf0r"]
+radius = 1.0
+height = 2.0
+
+[node name="PlanetBase" type="Node3D"]
+script = ExtResource("1_cxhl0")
+
+[node name="PlanetSphere" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_xcf0r")
+
+[node name="Atmosphere" type="MeshInstance3D" parent="."]
+
+[node name="Clouds" type="MeshInstance3D" parent="."]
+
+[node name="Rings" type="MeshInstance3D" parent="."]

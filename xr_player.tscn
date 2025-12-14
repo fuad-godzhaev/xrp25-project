@@ -1,0 +1,64 @@
+[gd_scene load_steps=7 format=4]
+
+[ext_resource type="Script" uid="uid://drtgdi28p6w7b" path="res://addons/hand_pose_detector/hand_pose_detector.gd" id="1"]
+[ext_resource type="Resource" uid="uid://ckjd0xa2a240p" path="res://addons/hand_pose_detector/poses/standard_pose_set.tres" id="2"]
+[ext_resource type="PackedScene" uid="uid://cjcehqrfoxav3" path="res://addons/hand_pose_detector/hands/LeftHandHumanoid.gltf" id="3"]
+[ext_resource type="PackedScene" uid="uid://dabmoo0spa6vg" path="res://addons/hand_pose_detector/hands/RightHandHumanoid.gltf" id="4"]
+[ext_resource type="Script" uid="uid://b446imb3cfd73" path="res://examples/room/open_xr_fb_scene_manager.gd" id="5"]
+[ext_resource type="Script" uid="uid://clsbe40gp0we7" path="res://examples/room/right.gd" id="6"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_1"]
+radius = 0.05
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_2"]
+radius = 0.05
+
+[node name="XROrigin3D" type="XROrigin3D"]
+
+[node name="OpenXRFbSceneManager" type="OpenXRFbSceneManager" parent="."]
+visible = false
+enable_passthrough = true
+script = ExtResource("5")
+
+[node name="XRCamera3D" type="XRCamera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
+
+[node name="AudioListener3D" type="AudioListener3D" parent="XRCamera3D"]
+
+[node name="left" type="XRNode3D" parent="."]
+tracker = &"left_hand"
+pose = &"aim"
+
+[node name="HandPoseDetector" type="Node" parent="left"]
+script = ExtResource("1")
+pose_set = ExtResource("2")
+
+[node name="left_hand" type="Area3D" parent="left"]
+collision_layer = 2
+collision_mask = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="left/left_hand"]
+shape = SubResource("SphereShape3D_1")
+
+[node name="LeftHandHumanoid2" parent="left" instance=ExtResource("3")]
+
+[node name="right" type="XRNode3D" parent="."]
+tracker = &"right_hand"
+pose = &"aim"
+script = ExtResource("6")
+
+[node name="HandPoseDetector" type="Node" parent="right"]
+script = ExtResource("1")
+pose_set = ExtResource("2")
+
+[node name="right_hand" type="Area3D" parent="right"]
+collision_layer = 2
+collision_mask = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="right/right_hand"]
+shape = SubResource("SphereShape3D_2")
+
+[node name="RightHandHumanoid2" parent="right" instance=ExtResource("4")]
+
+[connection signal="pose_detected" from="left/HandPoseDetector" to="left/HandPoseDetector" method="_on_pose_detected"]
+[connection signal="pose_detected" from="right/HandPoseDetector" to="right/HandPoseDetector" method="_on_pose_detected"]

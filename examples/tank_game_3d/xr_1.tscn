@@ -1,11 +1,12 @@
 [gd_scene load_steps=11 format=3 uid="uid://cajvwsg0035us"]
 
-[ext_resource type="Script" path="res://music_toys.gd" id="1_2fu0y"]
-[ext_resource type="Script" path="res://wall.gd" id="2_sndyd"]
+[ext_resource type="Script" uid="uid://c6c7r4x4jujna" path="res://examples/xr_sequencer/music_toys.gd" id="1_2fu0y"]
+[ext_resource type="Script" uid="uid://b7y0rln02745t" path="res://examples/behaviors/wall.gd" id="2_sndyd"]
 [ext_resource type="PackedScene" uid="uid://buu3aq61omx1k" path="res://examples/tank_game_3d/brick.tscn" id="3_qgak8"]
 [ext_resource type="Material" uid="uid://dvo75cymypytd" path="res://examples/tank_game_3d/green.tres" id="4_ffxka"]
-[ext_resource type="Script" path="res://tower.gd" id="5_wofw2"]
-[ext_resource type="Script" path="res://player.gd" id="6_q8smx"]
+[ext_resource type="Script" uid="uid://mkucon514ulc" path="res://examples/tank_game_3d/tower.gd" id="5_wofw2"]
+[ext_resource type="Script" uid="uid://corb7djmuwlbq" path="res://examples/gp/player.gd" id="6_q8smx"]
+
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_00q4b"]
 size = Vector2(100, 100)
