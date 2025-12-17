@@ -1,13 +1,14 @@
 [gd_scene load_steps=4 format=3 uid="uid://btwkhn6b37cpm"]
 
-[ext_resource type="PackedScene" uid="uid://dgde3px50kei4" path="res://solarity/Sun.tscn" id="1_dwu3q"]
+[ext_resource type="PackedScene" uid="uid://dgde3px50kei4" path="res://solarity/Sun/Sun.tscn" id="1_dwu3q"]
 [ext_resource type="PackedScene" uid="uid://duwsb068lp2fl" path="res://player_hands.tscn" id="1_i8jsa"]
 
 [sub_resource type="Environment" id="Environment_nrvqj"]
 background_mode = 1
 glow_enabled = true
+glow_normalized = true
 glow_intensity = 0.7
-glow_bloom = 0.3
+glow_bloom = 0.2
 glow_blend_mode = 0
 
 [node name="Space" type="Node3D"]
@@ -16,7 +17,7 @@ glow_blend_mode = 0
 environment = SubResource("Environment_nrvqj")
 
 [node name="player_hands" parent="." instance=ExtResource("1_i8jsa")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6.2113314)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10)
 
 [node name="Sun" parent="." instance=ExtResource("1_dwu3q")]
 

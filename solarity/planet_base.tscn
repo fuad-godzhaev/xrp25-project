@@ -1,19 +1,56 @@
-[gd_scene load_steps=3 format=3 uid="uid://188s15j7sbd7"]
+[gd_scene load_steps=7 format=3 uid="uid://188s15j7sbd7"]
 
 [ext_resource type="Script" uid="uid://b663bpjsrn87a" path="res://solarity/planet_base.gd" id="1_cxhl0"]
+[ext_resource type="Shader" uid="uid://btdpi5v1p0sfa" path="res://solarity/atmosphere.tres" id="2_xcf0r"]
 
-[sub_resource type="SphereMesh" id="SphereMesh_xcf0r"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xcf0r"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_d0p2w"]
 radius = 1.0
 height = 2.0
 
-[node name="PlanetBase" type="Node3D"]
-script = ExtResource("1_cxhl0")
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gwaco"]
+render_priority = 0
+shader = ExtResource("2_xcf0r")
+shader_parameter/atmosphere_base_color = Vector3(0.5, 0.7, 1)
+shader_parameter/falloff = 3.0
+shader_parameter/alpha_multiplier = 0.7
+shader_parameter/intensity = 1.0
 
-[node name="PlanetSphere" type="MeshInstance3D" parent="."]
-mesh = SubResource("SphereMesh_xcf0r")
+[sub_resource type="SphereMesh" id="SphereMesh_dncug"]
+radius = 1.1
+height = 2.2
+radial_segments = 32
+rings = 16
+
+[node name="Planet" type="Node3D"]
+script = ExtResource("1_cxhl0")
+use_procedural_surface = null
+surface_type = null
+land_color = null
+water_color = null
+noise_scale = null
+noise_seed = null
+land_threshold = null
+cloud_textures_folder = null
+use_random_cloud_texture = null
+cloud_texture_index = null
+cloud_texture_scale = null
+auto_scale_cloud_texture = null
+
+[node name="RotationPivot" type="Node3D" parent="."]
+transform = Transform3D(-0.018791452, 0, -1.0000131, 0, 1, 0, 1.0000131, 0, -0.018791452, 0, 0, 0)
+
+[node name="PlanetBody" type="MeshInstance3D" parent="RotationPivot"]
+material_override = SubResource("StandardMaterial3D_xcf0r")
+mesh = SubResource("SphereMesh_d0p2w")
 
 [node name="Atmosphere" type="MeshInstance3D" parent="."]
+material_override = SubResource("ShaderMaterial_gwaco")
+mesh = SubResource("SphereMesh_dncug")
 
 [node name="Clouds" type="MeshInstance3D" parent="."]
+visible = false
 
 [node name="Rings" type="MeshInstance3D" parent="."]
+visible = false

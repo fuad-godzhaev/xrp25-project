@@ -1,0 +1,95 @@
+[gd_scene load_steps=12 format=3 uid="uid://m75fhhupgmi"]
+
+[ext_resource type="Script" uid="uid://drtgdi28p6w7b" path="res://addons/hand_pose_detector/hand_pose_detector.gd" id="1_ar6qi"]
+[ext_resource type="Resource" uid="uid://ckjd0xa2a240p" path="res://addons/hand_pose_detector/poses/standard_pose_set.tres" id="2_ov8ap"]
+[ext_resource type="PackedScene" uid="uid://cjcehqrfoxav3" path="res://addons/hand_pose_detector/hands/LeftHandHumanoid.gltf" id="3_0myy5"]
+[ext_resource type="Material" uid="uid://r4hqqldkh2wy" path="res://examples/bge/trans.tres" id="4_81yw8"]
+[ext_resource type="Script" uid="uid://clsbe40gp0we7" path="res://examples/room/right.gd" id="5_446as"]
+[ext_resource type="PackedScene" uid="uid://df5hynbooj1uj" path="res://addons/hand_pose_detector/hand_pose_detector.tscn" id="6_ijelg"]
+[ext_resource type="PackedScene" uid="uid://dabmoo0spa6vg" path="res://addons/hand_pose_detector/hands/RightHandHumanoid.gltf" id="7_uuxi2"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_w683k"]
+radius = 0.05
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_wbv0l"]
+radius = 0.05
+height = 0.2
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_qkfci"]
+radius = 0.05
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_iycrg"]
+radius = 0.05
+height = 0.2
+
+[node name="CudeDump" type="Node3D"]
+
+[node name="left" type="XRNode3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.98522973, -0.52997756)
+visible = false
+tracker = &"/user/hand_tracker/left"
+show_when_tracked = true
+
+[node name="HandPoseDetector" type="Node" parent="left"]
+script = ExtResource("1_ar6qi")
+hand_pose_set = ExtResource("2_ov8ap")
+
+[node name="left_hand" type="Area3D" parent="left"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0680579, 0.159387)
+
+[node name="left_Hand_shape" type="CollisionShape3D" parent="left/left_hand"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.144068)
+shape = SubResource("SphereShape3D_w683k")
+
+[node name="LeftHandHumanoid2" parent="left" instance=ExtResource("3_0myy5")]
+
+[node name="LeftHandHumanoidMesh" parent="left/LeftHandHumanoid2/LeftHandHumanoid/Skeleton3D" index="0"]
+surface_material_override/0 = ExtResource("4_81yw8")
+
+[node name="XRHandModifier3D" type="XRHandModifier3D" parent="left/LeftHandHumanoid2/LeftHandHumanoid/Skeleton3D" index="1"]
+
+[node name="collider" type="CharacterBody3D" parent="left"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="left/collider"]
+shape = SubResource("CapsuleShape3D_wbv0l")
+
+[node name="right" type="XRNode3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.382027, 1.0023637, -0.5218799)
+visible = false
+tracker = &"/user/hand_tracker/right"
+show_when_tracked = true
+script = ExtResource("5_446as")
+
+[node name="HandPoseDetector" parent="right" instance=ExtResource("6_ijelg")]
+hand_tracker_name = "/user/hand_tracker/right"
+hand_pose_set = ExtResource("2_ov8ap")
+
+[node name="right_hand" type="Area3D" parent="right"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0676188, 0.159387)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="right/right_hand"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.144068)
+shape = SubResource("SphereShape3D_qkfci")
+
+[node name="RightHandHumanoid2" parent="right" instance=ExtResource("7_uuxi2")]
+
+[node name="XRHandModifier3D" type="XRHandModifier3D" parent="right/RightHandHumanoid2/RightHandHumanoid/Skeleton3D" index="0"]
+hand_tracker = &"/user/hand_tracker/right"
+
+[node name="RightHandHumanoidMesh" parent="right/RightHandHumanoid2/RightHandHumanoid/Skeleton3D" index="1"]
+surface_material_override/0 = ExtResource("4_81yw8")
+
+[node name="collider" type="CharacterBody3D" parent="right"]
+visible = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="right/collider"]
+shape = SubResource("CapsuleShape3D_iycrg")
+
+[connection signal="area_entered" from="left/left_hand" to="left" method="_on_right_hand_area_entered"]
+[connection signal="pose_ended" from="right/HandPoseDetector" to="right" method="_on_hand_pose_detector_pose_ended"]
+[connection signal="pose_started" from="right/HandPoseDetector" to="right" method="_on_hand_pose_detector_pose_started"]
+[connection signal="area_entered" from="right/right_hand" to="right" method="_on_right_hand_area_entered"]
+[connection signal="area_exited" from="right/right_hand" to="right" method="_on_right_hand_area_exited"]
+
+[editable path="left/LeftHandHumanoid2"]
+[editable path="right/RightHandHumanoid2"]
