@@ -1,12 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://duwsb068lp2fl"]
+[gd_scene load_steps=6 format=3 uid="uid://duwsb068lp2fl"]
 
 [ext_resource type="Script" uid="uid://dm40x5uvhqsmb" path="res://examples/bge/start_xr.gd" id="7_f4bup"]
-[ext_resource type="PackedScene" uid="uid://b2447e5p6kwug" path="res://examples/room/scene_anchor.tscn" id="8_1yrqs"]
-[ext_resource type="PackedScene" uid="uid://cukl4cie1tact" path="res://examples/room/scene_global_mesh.tscn" id="9_j5fdr"]
-[ext_resource type="Script" uid="uid://b446imb3cfd73" path="res://examples/room/open_xr_fb_scene_manager.gd" id="10_43yb1"]
 [ext_resource type="PackedScene" uid="uid://cjcehqrfoxav3" path="res://addons/hand_pose_detector/hands/LeftHandHumanoid.gltf" id="11_54xha"]
-[ext_resource type="Material" uid="uid://r4hqqldkh2wy" path="res://examples/bge/trans.tres" id="12_7q23v"]
+[ext_resource type="Material" uid="uid://visible_hand_mat" path="res://solarity/hand_material_visible.tres" id="12_7q23v"]
 [ext_resource type="PackedScene" uid="uid://dabmoo0spa6vg" path="res://addons/hand_pose_detector/hands/RightHandHumanoid.gltf" id="13_y65lw"]
+[ext_resource type="PackedScene" uid="uid://cqhw276realc" path="res://addons/godot-xr-tools/functions/function_pointer.tscn" id="14_pointer"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gon6y"]
 radius = 0.05
@@ -19,15 +17,8 @@ script = ExtResource("7_f4bup")
 debug_thickness = 0.001
 
 [node name="XROrigin3D" type="XROrigin3D" parent="."]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
-
-[node name="OpenXRFbSceneManager" type="OpenXRFbSceneManager" parent="XROrigin3D"]
-default_scene = ExtResource("8_1yrqs")
-scenes/global_mesh = ExtResource("9_j5fdr")
-script = ExtResource("10_43yb1")
 
 [node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2939161, 0.4574027)
 current = true
 fov = 80.1
 near = 0.001
@@ -57,6 +48,8 @@ surface_material_override/0 = ExtResource("12_7q23v")
 
 [node name="XRHandModifier3D" type="XRHandModifier3D" parent="XROrigin3D/left_controller/LeftHandHumanoid2/LeftHandHumanoid/Skeleton3D" index="1"]
 
+[node name="FunctionPointer" parent="XROrigin3D/left_controller" instance=ExtResource("14_pointer")]
+
 [node name="right_controller" type="XRController3D" parent="XROrigin3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2281102, 0, 0)
 tracker = &"right_hand"
@@ -80,6 +73,8 @@ hand_tracker = &"/user/hand_tracker/right"
 
 [node name="RightHandHumanoidMesh" parent="XROrigin3D/right_controller/RightHandHumanoid2/RightHandHumanoid/Skeleton3D" index="1"]
 surface_material_override/0 = ExtResource("12_7q23v")
+
+[node name="FunctionPointer" parent="XROrigin3D/right_controller" instance=ExtResource("14_pointer")]
 
 [editable path="XROrigin3D/left_controller/LeftHandHumanoid2"]
 [editable path="XROrigin3D/right_controller/RightHandHumanoid2"]

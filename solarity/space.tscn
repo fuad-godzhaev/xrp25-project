@@ -1,7 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://btwkhn6b37cpm"]
+[gd_scene load_steps=10 format=3 uid="uid://btwkhn6b37cpm"]
 
 [ext_resource type="PackedScene" uid="uid://dgde3px50kei4" path="res://solarity/Sun/Sun.tscn" id="1_dwu3q"]
 [ext_resource type="PackedScene" uid="uid://duwsb068lp2fl" path="res://player_hands.tscn" id="1_i8jsa"]
+[ext_resource type="Script" uid="uid://uypk8vtjhwa4" path="res://solarity/space_scene.gd" id="1_q1bxf"]
+[ext_resource type="PackedScene" uid="uid://bs5baiunqjtf1" path="res://solarity/Earth.tscn" id="3_xcaad"]
+[ext_resource type="PackedScene" uid="uid://gos8ssfanqj3" path="res://solarity/Moon.tscn" id="4_x268b"]
+[ext_resource type="PackedScene" uid="uid://02t1x6mfmrgh" path="res://solarity/Mars.tscn" id="5_46nt0"]
+[ext_resource type="PackedScene" uid="uid://dus4uwghw243g" path="res://solarity/jupiter.tscn" id="6_d5pca"]
+[ext_resource type="PackedScene" uid="uid://188s15j7sbd7" path="res://solarity/planet_base.tscn" id="7_a0nqf"]
 
 [sub_resource type="Environment" id="Environment_nrvqj"]
 background_mode = 1
@@ -12,17 +18,166 @@ glow_bloom = 0.2
 glow_blend_mode = 0
 
 [node name="Space" type="Node3D"]
+script = ExtResource("1_q1bxf")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_nrvqj")
 
 [node name="player_hands" parent="." instance=ExtResource("1_i8jsa")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10)
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -600, 0, -900)
 
 [node name="Sun" parent="." instance=ExtResource("1_dwu3q")]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
 
 [node name="OmniLight3D" type="OmniLight3D" parent="Sun"]
 light_energy = 10.0
 shadow_enabled = true
-omni_range = 100.0
+distance_fade_begin = 1500.0
+omni_range = 2000.0
 omni_attenuation = 2.0
+
+[node name="Earth" parent="." node_paths=PackedStringArray("orbital_center") instance=ExtResource("3_xcaad")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1000, 0, 0)
+day_texture = Object(MeshInstance3D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"physics_interpolation_mode":0,"auto_translate_mode":0,"editor_description":"","transform":Transform3D(0.3738016, 0, -0.92801476, 0, 1, 0, 0.92801476, 0, 0.3738016, 0, 0, 0),"rotation_edit_mode":0,"rotation_order":2,"top_level":false,"visible":true,"visibility_parent":NodePath(""),"layers":1,"sorting_offset":0.0,"sorting_use_aabb_center":true,"material_override":null,"material_overlay":null,"transparency":0.0,"cast_shadow":1,"extra_cull_margin":0.0,"custom_aabb":AABB(0, 0, 0, 0, 0, 0),"lod_bias":1.0,"ignore_occlusion_culling":false,"gi_mode":1,"gi_lightmap_texel_scale":1.0,"visibility_range_begin":0.0,"visibility_range_begin_margin":0.0,"visibility_range_end":0.0,"visibility_range_end_margin":0.0,"visibility_range_fade_mode":0,"mesh":null,"skin":null,"skeleton":NodePath(".."),"surface_material_override/0":null,"script":null)
+
+night_texture = Object(MeshInstance3D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"physics_interpolation_mode":0,"auto_translate_mode":0,"editor_description":"","transform":Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0),"rotation_edit_mode":0,"rotation_order":2,"top_level":false,"visible":false,"visibility_parent":NodePath(""),"layers":1,"sorting_offset":0.0,"sorting_use_aabb_center":true,"material_override":null,"material_overlay":null,"transparency":0.0,"cast_shadow":1,"extra_cull_margin":0.0,"custom_aabb":AABB(0, 0, 0, 0, 0, 0),"lod_bias":1.0,"ignore_occlusion_culling":false,"gi_mode":1,"gi_lightmap_texel_scale":1.0,"visibility_range_begin":0.0,"visibility_range_begin_margin":0.0,"visibility_range_end":0.0,"visibility_range_end_margin":0.0,"visibility_range_fade_mode":0,"mesh":null,"skin":null,"skeleton":NodePath(".."),"script":null)
+
+sun_direction = Object(Node3D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"physics_interpolation_mode":0,"auto_translate_mode":0,"editor_description":"","transform":Transform3D(-0.6935192, 0.28646326, 0.6627008, 0, 0.91775465, -0.39758924, -0.7220813, -0.2751313, -0.6364848, 0, 0, 0),"rotation_edit_mode":0,"rotation_order":2,"top_level":false,"visible":true,"visibility_parent":NodePath(""),"script":null)
+
+planet_radius = 6.378
+rotation_speed = 10.0
+axial_tilt = 23.4
+orbital_radius = 1000.0
+orbital_speed = 4.0
+orbital_center = NodePath("../Sun")
+cloud_opacity = 0.1
+pause_on_player_nearby = null
+pause_distance = null
+auto_generate_moons = null
+auto_generate_rings = null
+
+[node name="Mars" parent="." node_paths=PackedStringArray("orbital_center") instance=ExtResource("5_46nt0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -799.55334, 0, -894.8265)
+planet_radius = 3.396
+rotation_speed = 5.0
+axial_tilt = 25.0
+orbital_radius = 1200.0
+orbital_speed = 5.0
+orbital_center = NodePath("../Sun")
+
+[node name="Jupiter" parent="." node_paths=PackedStringArray("orbital_center") instance=ExtResource("6_d5pca")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -228.67221, 0, 1482.4672)
+planet_radius = 71.492
+axial_tilt = 3.0
+orbital_radius = 1500.0
+orbital_speed = 2.0
+orbital_center = NodePath("../Sun")
+auto_generate_moons = true
+
+[node name="Moons2" type="Node3D" parent="Jupiter"]
+
+[node name="Io" parent="Jupiter/Moons2" node_paths=PackedStringArray("orbital_center") instance=ExtResource("7_a0nqf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -60.719612, 0, -79.4552)
+planet_name = "Io"
+planet_radius = 2.0
+has_atmosphere = false
+rotation_speed = 0.8787378806167766
+axial_tilt = -4.655022832377377
+orbital_radius = 100.0
+orbital_speed = 12.0
+orbital_center = NodePath("..")
+use_procedural_surface = true
+surface_type = 3
+land_color = Color(0.6273413, 0.62230754, 0.6122401, 1)
+water_color = Color(0.46874782, 0.46427336, 0.4553245, 1)
+noise_scale = 3.0
+noise_seed = 176647609
+land_threshold = 0.4
+
+[node name="Europa" parent="Jupiter/Moons2" node_paths=PackedStringArray("orbital_center") instance=ExtResource("7_a0nqf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -90.05086, 0, 93.75949)
+planet_name = "Europa"
+planet_radius = 1.8
+has_atmosphere = false
+rotation_speed = 0.6475901497760098
+axial_tilt = -2.2733083803601457
+orbital_radius = 130.0
+orbital_center = NodePath("..")
+use_procedural_surface = true
+surface_type = 3
+land_color = Color(0.3877009, 0.39817938, 0.4191364, 1)
+water_color = Color(0.25573412, 0.26504835, 0.2836768, 1)
+noise_scale = 3.0
+noise_seed = 2186730564
+land_threshold = 0.4
+
+[node name="Ganymede" parent="Jupiter/Moons2" node_paths=PackedStringArray("orbital_center") instance=ExtResource("7_a0nqf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 130.94359, 0, 91.94441)
+planet_name = "Ganymede"
+planet_radius = 2.5
+has_atmosphere = false
+rotation_speed = 1.9345037492623172
+axial_tilt = -1.7366225722474269
+orbital_radius = 160.0
+orbital_speed = 8.0
+orbital_center = NodePath("..")
+use_procedural_surface = true
+surface_type = 3
+land_color = Color(0.6004437, 0.61224437, 0.63584566, 1)
+water_color = Color(0.44483885, 0.45532832, 0.47630724, 1)
+noise_scale = 3.0
+noise_seed = 639853703
+land_threshold = 0.4
+
+[node name="Callisto" parent="Jupiter/Moons2" node_paths=PackedStringArray("orbital_center") instance=ExtResource("7_a0nqf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 84.20279, 0, -170.3229)
+planet_name = "Callisto"
+planet_radius = 2.3
+has_atmosphere = false
+rotation_speed = 1.3038894087828838
+axial_tilt = -2.1835784359490047
+orbital_radius = 190.0
+orbital_speed = 6.0
+orbital_center = NodePath("..")
+use_procedural_surface = true
+surface_type = 3
+land_color = Color(0.62699664, 0.6315888, 0.64077324, 1)
+water_color = Color(0.46844146, 0.47252342, 0.48068735, 1)
+noise_scale = 3.0
+noise_seed = 1604465250
+land_threshold = 0.4
+
+[node name="Amalthea" parent="Jupiter/Moons2" node_paths=PackedStringArray("orbital_center") instance=ExtResource("7_a0nqf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -78.50864, 0, 15.375121)
+planet_name = "Amalthea"
+planet_radius = 0.5
+has_atmosphere = false
+rotation_speed = 1.238458384526257
+axial_tilt = 1.4194287070266007
+orbital_radius = 80.0
+orbital_speed = 18.0
+orbital_center = NodePath("..")
+use_procedural_surface = true
+surface_type = 3
+land_color = Color(0.55320245, 0.5697793, 0.60293305, 1)
+water_color = Color(0.40284663, 0.41758162, 0.4470516, 1)
+noise_scale = 3.0
+noise_seed = 1465264704
+land_threshold = 0.4
+
+[node name="Moon" parent="." node_paths=PackedStringArray("orbital_center") instance=ExtResource("4_x268b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 993.073, 0, 7.212269)
+orbital_center = NodePath("../Earth")
+
+[node name="Mercury" parent="." instance=ExtResource("7_a0nqf")]
+planet_name = "Mercury"
+
+[node name="Venus" parent="." instance=ExtResource("7_a0nqf")]
+
+[node name="Uranus" parent="." instance=ExtResource("7_a0nqf")]
+
+[node name="Neptune" parent="." instance=ExtResource("7_a0nqf")]
+
+[node name="Saturn" parent="." instance=ExtResource("7_a0nqf")]
+
+[node name="Pluto" parent="." instance=ExtResource("7_a0nqf")]

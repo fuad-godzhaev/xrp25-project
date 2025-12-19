@@ -1,4 +1,5 @@
-## TODO: rings, gravity
+## TODO: rings, gravity, split the code in to smaller files?
+## I didn't expect it to grow this big...
 @tool
 
 class_name Planet
@@ -16,6 +17,10 @@ enum SurfaceType {
 
 ## Planet properties that can be customized per planet
 @export_group("Planet Properties")
+@export var _play_in_editor: bool = true:
+	set(value):
+		_play_in_editor = value
+		
 @export var planet_name: String = "Planet":
 	set(value):
 		planet_name = value
@@ -143,35 +148,23 @@ enum SurfaceType {
 			_update_planet_in_editor()
 
 @export_group("Cloud Settings")
-@export var cloud_textures_folder: String = "res://solarity/cloud_textures"
-@export var use_random_cloud_texture: bool = true
-@export var cloud_texture_index: int = 1:
+@export var cloud_texture: Texture2D:
 	set(value):
-		cloud_texture_index = clamp(value, 1, 125)
-		if Engine.is_editor_hint() and not use_random_cloud_texture:
-			_update_planet_in_editor()
-
-@export var cloud_count: int = 20:  # Number of individual clouds
-	set(value):
-		cloud_count = clamp(value, 1, 100)
+		cloud_texture = value
 		if Engine.is_editor_hint():
 			_update_planet_in_editor()
 
-@export var cloud_size_min: float = 0.3:  # Min cloud size relative to planet
+@export var cloud_texture_scale: Vector2 = Vector2(1.0, 1.0):
 	set(value):
-		cloud_size_min = value
+		cloud_texture_scale = value
 		if Engine.is_editor_hint():
 			_update_planet_in_editor()
 
-@export var cloud_size_max: float = 0.8:  # Max cloud size relative to planet
-	set(value):
-		cloud_size_max = value
-		if Engine.is_editor_hint():
-			_update_planet_in_editor()
+@export var auto_scale_cloud_texture: bool = true
 
 @export var cloud_speed: float = 0.5
 
-@export var cloud_height: float = 0.05:  # relative to radius
+@export var cloud_height: float = 0.05:
 	set(value):
 		cloud_height = value
 		if Engine.is_editor_hint():
@@ -188,17 +181,36 @@ enum SurfaceType {
 @export var gravity_strength: float = 9.8
 @export var gravity_range: float = 10.0
 
-# Internal references - can't use @onready in @tool scripts that need to work in editor
+@export_group("Player Interaction")
+@export var pause_on_player_nearby: bool = true
+@export var pause_distance: float = 200.0  # Distance from player to pause planet movement
+
+@export_group("Celestial Generation")
+@export var auto_generate_moons: bool = false:
+	set(value):
+		auto_generate_moons = value
+		if value and Engine.is_editor_hint():
+			generate_moons()
+
+@export var auto_generate_rings: bool = false:
+	set(value):
+		auto_generate_rings = value
+		if value and Engine.is_editor_hint():
+			generate_rings()
+
+# Internal references
 var body: MeshInstance3D
 var atmosphere: MeshInstance3D
-var clouds_container: Node3D  # Container for multiple cloud meshes
+var clouds: MeshInstance3D
 var rings: MeshInstance3D
 var rotation_pivot: Node3D
 
 var orbital_angle: float = 0.0
 var _editor_initialized: bool = false
+var _is_paused: bool = false
+var _xr_camera: XRCamera3D = null
 
-# NEW: Editor initialization and update functions
+# Editor initialization and update functions
 func _ready():
 	if Engine.is_editor_hint():
 		_initialize_editor_nodes()
@@ -212,7 +224,7 @@ func _initialize_editor_nodes():
 	# Create or get child nodes for the planet structure
 	body = _get_or_create_child("PlanetBody", MeshInstance3D)
 	atmosphere = _get_or_create_child("Atmosphere", MeshInstance3D)
-	clouds_container = _get_or_create_child("Clouds", Node3D)
+	clouds = _get_or_create_child("Clouds", MeshInstance3D)
 	rings = _get_or_create_child("Rings", MeshInstance3D)
 	rotation_pivot = _get_or_create_child("RotationPivot", Node3D)
 
@@ -246,7 +258,7 @@ func _get_node_references():
 	# Runtime node reference gathering
 	body = $RotationPivot/PlanetBody if has_node("RotationPivot/PlanetBody") else null
 	atmosphere = $Atmosphere if has_node("Atmosphere") else null
-	clouds_container = $Clouds if has_node("Clouds") else null
+	clouds = $Clouds if has_node("Clouds") else null
 	rings = $Rings if has_node("Rings") else null
 	rotation_pivot = $RotationPivot if has_node("RotationPivot") else null
 
@@ -256,7 +268,7 @@ func _update_planet_in_editor():
 	_setup_planet()
 
 func _setup_planet():
-	if not body or not atmosphere or not clouds_container or not rings or not rotation_pivot:
+	if not body or not atmosphere or not clouds or not rings or not rotation_pivot:
 		return
 
 	_setup_body()
@@ -265,7 +277,7 @@ func _setup_planet():
 	if has_atmosphere:
 		_setup_atmosphere()
 
-	clouds_container.visible = has_clouds
+	clouds.visible = has_clouds
 	if has_clouds:
 		_setup_clouds()
 
@@ -277,7 +289,7 @@ func _setup_planet():
 	rotation_pivot.rotation_degrees = Vector3(axial_tilt, 0, 0)
 
 	# Position in orbit if orbital_center is set
-	if orbital_center:
+	if is_instance_valid(orbital_center):
 		position = Vector3(orbital_radius, 0, 0)
 
 
@@ -398,74 +410,35 @@ func _setup_atmosphere():
 		atmosphere.material_override = shader_material
 
 func _setup_clouds():
-	if not clouds_container:
+	if not clouds:
 		return
 
-	# Clear existing clouds
-	for child in clouds_container.get_children():
-		child.queue_free()
-
+	var sphere = SphereMesh.new()
 	var cloud_radius = planet_radius * (1.0 + cloud_height)
+	sphere.radius = cloud_radius
+	sphere.height = cloud_radius * 2.0
+	sphere.radial_segments = 64
+	sphere.rings = 32
+	clouds.mesh = sphere
 
-	# Create multiple individual clouds
-	for i in range(cloud_count):
-		var cloud = MeshInstance3D.new()
-		cloud.name = "Cloud_" + str(i)
+	var material = StandardMaterial3D.new()
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.blend_mode = BaseMaterial3D.BLEND_MODE_MIX
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 
-		# Random size for this cloud
-		var size = randf_range(cloud_size_min, cloud_size_max) * planet_radius
+	if cloud_texture:
+		material.albedo_texture = cloud_texture
 
-		# Create plane mesh for cloud (billboard-like)
-		var plane = PlaneMesh.new()
-		plane.size = Vector2(size, size)
-		cloud.mesh = plane
+		var uv_scale = cloud_texture_scale
+		if auto_scale_cloud_texture:
+			var scale_factor = planet_radius / 1.0
+			uv_scale = Vector2(scale_factor, scale_factor)
 
-		# Random position on sphere surface
-		var theta = randf() * TAU
-		var phi = randf() * PI
-		var x = cloud_radius * sin(phi) * cos(theta)
-		var y = cloud_radius * cos(phi)
-		var z = cloud_radius * sin(phi) * sin(theta)
-		cloud.position = Vector3(x, y, z)
+		material.uv1_scale = Vector3(uv_scale.x, uv_scale.y, 1.0)
 
-		# Make cloud face outward from planet center
-		cloud.look_at(Vector3.ZERO, Vector3.UP)
+	material.albedo_color = Color(1, 1, 1, cloud_opacity)
 
-		# Create material
-		var material = StandardMaterial3D.new()
-		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-		material.blend_mode = BaseMaterial3D.BLEND_MODE_MIX
-		material.cull_mode = BaseMaterial3D.CULL_DISABLED
-		material.billboard_mode = BaseMaterial3D.BILLBOARD_DISABLED
-
-		# Load random cloud texture
-		var cloud_tex = _load_cloud_texture()
-		if cloud_tex:
-			material.albedo_texture = cloud_tex
-
-		material.albedo_color = Color(1, 1, 1, cloud_opacity)
-
-		cloud.material_override = material
-		clouds_container.add_child(cloud)
-
-		if Engine.is_editor_hint():
-			cloud.owner = get_tree().edited_scene_root
-
-func _load_cloud_texture() -> Texture2D:
-	var texture_index = cloud_texture_index
-
-	# Use random texture if enabled
-	if use_random_cloud_texture:
-		texture_index = randi_range(1, 125)
-
-	var texture_path = cloud_textures_folder + "/Cloud_" + str(texture_index).pad_zeros(4) + ".jpg"
-
-	# Load and return the texture
-	if ResourceLoader.exists(texture_path):
-		return load(texture_path)
-	else:
-		push_warning("Cloud texture not found: " + texture_path)
-		return null
+	clouds.material_override = material
 
 func _setup_rings():
 	# TODO: Implement rings
@@ -479,20 +452,40 @@ func _process(delta: float) -> void:
 	if not rotation_pivot:
 		return
 
-	# Rotate around own axis
+	# Check if we should pause orbital movement based on player proximity
+	_check_player_proximity()
+
+	# Rotate around own axis (always happens, even when paused)
 	rotation_pivot.rotate(rotation_axis.normalized(), deg_to_rad(rotation_speed * delta))
 
-	# Orbit around center if set
-	if orbital_center:
+	# Orbit around center if set (only if not paused)
+	if is_instance_valid(orbital_center) and not _is_paused:
 		orbital_angle += deg_to_rad(orbital_speed * delta)
 		position = orbital_center.position + Vector3(
 			cos(orbital_angle) * orbital_radius,
 			0,
 			sin(orbital_angle) * orbital_radius
 		)
-		
-	if has_clouds and clouds_container and clouds_container.visible:
-		clouds_container.rotate_y(deg_to_rad(cloud_speed * delta))
+
+	if has_clouds and clouds and clouds.visible:
+		clouds.rotate_y(deg_to_rad(cloud_speed * delta))
+
+func _check_player_proximity():
+	if not pause_on_player_nearby:
+		_is_paused = false
+		return
+
+	# Find XR camera if we don't have it yet
+	if not _xr_camera:
+		_xr_camera = get_viewport().get_camera_3d()
+		if not _xr_camera:
+			return
+
+	# Check distance from player to planet
+	var distance = global_position.distance_to(_xr_camera.global_position)
+
+	# Pause if player is within pause distance
+	_is_paused = distance < pause_distance
 
 func _physics_process(delta: float):
 	# Don't run physics in editor mode
@@ -506,3 +499,25 @@ func _apply_gravity():
 	var space_state = get_world_3d().direct_space_state
 	# TODO: Implement gravity pulling logic here
 	pass
+
+## Generate moons for this planet using CelestialGenerator
+func generate_moons():
+	CelestialGenerator.generate_moons(self)
+
+## Generate rings for this planet using CelestialGenerator
+func generate_rings():
+	CelestialGenerator.generate_rings(self)
+
+## Clear all generated moons
+func clear_moons():
+	var moons_container = get_node_or_null("Moons")
+	if moons_container:
+		remove_child(moons_container)
+		moons_container.queue_free()
+
+## Clear all generated rings
+func clear_rings():
+	var rings_container = get_node_or_null("Rings")
+	if rings_container:
+		remove_child(rings_container)
+		rings_container.queue_free()

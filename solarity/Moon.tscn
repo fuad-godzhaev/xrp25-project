@@ -1,0 +1,47 @@
+[gd_scene load_steps=7 format=3 uid="uid://gos8ssfanqj3"]
+
+[ext_resource type="PackedScene" uid="uid://188s15j7sbd7" path="res://solarity/planet_base.tscn" id="1_1rqns"]
+[ext_resource type="Shader" uid="uid://btdpi5v1p0sfa" path="res://solarity/atmosphere.tres" id="2_mucaq"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1rqns"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_mucaq"]
+radius = 1.0
+height = 2.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_adk7c"]
+render_priority = 0
+shader = ExtResource("2_mucaq")
+shader_parameter/atmosphere_base_color = Vector3(0.5, 0.7, 1)
+shader_parameter/falloff = 3.0
+shader_parameter/alpha_multiplier = 0.7
+shader_parameter/intensity = 1.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_fcb72"]
+radius = 1.1
+height = 2.2
+radial_segments = 32
+rings = 16
+
+[node name="Moon" instance=ExtResource("1_1rqns")]
+planet_name = "Moon"
+use_procedural_surface = false
+surface_type = 0
+land_color = Color(0.2, 0.5, 0.1, 1)
+water_color = Color(0.1, 0.3, 0.6, 1)
+noise_scale = 5.0
+noise_seed = 0
+land_threshold = 0.3
+cloud_texture_scale = Vector2(1, 1)
+auto_scale_cloud_texture = true
+
+[node name="RotationPivot" parent="." index="0"]
+transform = Transform3D(0.99301904, 0, 0.11973085, 0, 1, 0, -0.11973085, 0, 0.99301904, 0, 0, 0)
+
+[node name="PlanetBody" parent="RotationPivot" index="0"]
+material_override = SubResource("StandardMaterial3D_1rqns")
+mesh = SubResource("SphereMesh_mucaq")
+
+[node name="Atmosphere" parent="." index="1"]
+material_override = SubResource("ShaderMaterial_adk7c")
+mesh = SubResource("SphereMesh_fcb72")

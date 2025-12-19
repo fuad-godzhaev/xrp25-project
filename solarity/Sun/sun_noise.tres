@@ -7,3 +7,8 @@ fractal_octaves = 4
 
 [resource]
 noise = SubResource("FastNoiseLite_bce6i")
+seamless = true
+in_3d_space = true
+as_normal_map = true
+seamless_blend_skirt = 0.254
+bump_strength = 19.8

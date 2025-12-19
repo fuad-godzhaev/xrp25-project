@@ -44,8 +44,9 @@ func _ready():
 		xr_interface.session_focussed.connect(_on_openxr_focused_state)
 		xr_interface.session_stopping.connect(_on_openxr_stopping)
 		xr_interface.pose_recentered.connect(_on_openxr_pose_recentered)
-		
-		enable_passthrough()
+
+		# Disable passthrough for full VR mode
+		disable_passthrough()
 		
 	else:
 		# We couldn't start OpenXR.
@@ -133,7 +134,7 @@ func _on_openxr_pose_recentered() -> void:
 	emit_signal("pose_recentered")
 	
 func enable_passthrough() -> bool:
-	if xr_interface and xr_interface.is_passthrough_supported():		
+	if xr_interface and xr_interface.is_passthrough_supported():
 		return xr_interface.start_passthrough()
 	else:
 		var modes = xr_interface.get_supported_environment_blend_modes()
@@ -142,3 +143,20 @@ func enable_passthrough() -> bool:
 			return true
 		else:
 			return false
+
+func disable_passthrough() -> bool:
+	# Stop passthrough if it's running
+	if xr_interface and xr_interface.is_passthrough_enabled():
+		xr_interface.stop_passthrough()
+
+	# Set environment blend mode to opaque (full VR)
+	if xr_interface:
+		var modes = xr_interface.get_supported_environment_blend_modes()
+		if xr_interface.XR_ENV_BLEND_MODE_OPAQUE in modes:
+			xr_interface.set_environment_blend_mode(xr_interface.XR_ENV_BLEND_MODE_OPAQUE)
+			print("OpenXR: Set to full VR mode (opaque)")
+			return true
+		else:
+			push_warning("OpenXR: Opaque blend mode not supported")
+			return false
+	return false

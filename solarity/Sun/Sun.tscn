@@ -12,12 +12,14 @@ shader_parameter/base_color = Vector3(1, 0.8, 0.2)
 shader_parameter/animation_speed = 0.1
 shader_parameter/noise_texture = ExtResource("2_f0g5r")
 shader_parameter/hot_color = Color(1, 0.977692, 0.854306, 1)
-shader_parameter/emission_strength = 2.0
+shader_parameter/emission_strength = 2.2010001045475
 
 [sub_resource type="SphereMesh" id="SphereMesh_5ywjw"]
 material = SubResource("ShaderMaterial_f0g5r")
-radius = 1.0
-height = 2.0
+radius = 69.57
+height = 139.14
+radial_segments = 128
+rings = 64
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_k876h"]
 render_priority = 0
@@ -29,8 +31,8 @@ shader_parameter/corona_intensity = 1.5
 
 [sub_resource type="SphereMesh" id="SphereMesh_hrmwt"]
 material = SubResource("ShaderMaterial_k876h")
-radius = 1.2
-height = 2.4
+radius = 75.0
+height = 150.0
 
 [node name="Sun" type="Node3D"]
 

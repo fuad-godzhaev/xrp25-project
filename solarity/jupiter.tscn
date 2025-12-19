@@ -1,0 +1,63 @@
+[gd_scene load_steps=10 format=3 uid="uid://dus4uwghw243g"]
+
+[ext_resource type="PackedScene" uid="uid://188s15j7sbd7" path="res://solarity/planet_base.tscn" id="1_e52tp"]
+[ext_resource type="Shader" uid="uid://btdpi5v1p0sfa" path="res://solarity/atmosphere.tres" id="2_7mwnh"]
+
+[sub_resource type="Gradient" id="Gradient_e52tp"]
+offsets = PackedFloat32Array(0, 0, 0.25, 0.5, 0.75, 1, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.7, 0.5, 0.3, 1, 0.9, 0.7, 0.5, 1, 0.8, 0.6, 0.4, 1, 0.95, 0.8, 0.6, 1, 1, 1, 1, 1, 0.85, 0.65, 0.45, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_7mwnh"]
+seed = 12409851
+frequency = 1.0
+fractal_type = 2
+fractal_octaves = 4
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_yd8gr"]
+noise = SubResource("FastNoiseLite_7mwnh")
+color_ramp = SubResource("Gradient_e52tp")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5kkwq"]
+albedo_texture = SubResource("NoiseTexture2D_yd8gr")
+
+[sub_resource type="SphereMesh" id="SphereMesh_66tay"]
+radius = 1.0
+height = 2.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bmpcl"]
+render_priority = 0
+shader = ExtResource("2_7mwnh")
+shader_parameter/atmosphere_base_color = Vector3(0.5, 0.7, 1)
+shader_parameter/falloff = 3.0
+shader_parameter/alpha_multiplier = 0.7
+shader_parameter/intensity = 1.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_sfwre"]
+radius = 1.1
+height = 2.2
+radial_segments = 32
+rings = 16
+
+[node name="Jupiter" instance=ExtResource("1_e52tp")]
+planet_name = "Jupiter"
+surface_color = Color(0.7647059, 0.74509805, 0.67058825, 1)
+use_procedural_surface = true
+surface_type = 4
+land_color = Color(0.5830253, 0.32340515, 0.47299385, 1)
+water_color = Color(0.42864242, 0.20241556, 0.49116975, 1)
+noise_scale = 100.0
+noise_seed = 12409851
+land_threshold = 1.0
+cloud_texture_scale = Vector2(1, 1)
+auto_scale_cloud_texture = true
+
+[node name="RotationPivot" parent="." index="0"]
+transform = Transform3D(0.910894, 0, 0.4133544, 0, 1, 0, -0.4133544, 0, 0.910894, 0, 0, 0)
+
+[node name="PlanetBody" parent="RotationPivot" index="0"]
+material_override = SubResource("StandardMaterial3D_5kkwq")
+mesh = SubResource("SphereMesh_66tay")
+
+[node name="Atmosphere" parent="." index="1"]
+material_override = SubResource("ShaderMaterial_bmpcl")
+mesh = SubResource("SphereMesh_sfwre")
