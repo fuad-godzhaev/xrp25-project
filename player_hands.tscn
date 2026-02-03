@@ -48,16 +48,13 @@ surface_material_override/0 = ExtResource("12_7q23v")
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, -0.08376597)
 shape = SubResource("CapsuleShape3D_gon6y")
 
-<<<<<<< HEAD
-=======
+==== BASE ====
 [node name="LeftHandHumanoidMesh" parent="XROrigin3D/left_controller/LeftHandHumanoid2/LeftHandHumanoid/Skeleton3D" index="0"]
 surface_material_override/0 = ExtResource("12_7q23v")
 
 [node name="XRHandModifier3D" type="XRHandModifier3D" parent="XROrigin3D/left_controller/LeftHandHumanoid2/LeftHandHumanoid/Skeleton3D" index="1"]
 
-[node name="FunctionPointer" parent="XROrigin3D/left_controller" instance=ExtResource("14_pointer")]
-
->>>>>>> 59f7c033e82b50d49ef2192ce2b7a59dc6d98919
+==== BASE ====
 [node name="right_controller" type="XRController3D" parent="XROrigin3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2281102, 0, 0)
 tracker = &"right_hand"
@@ -82,16 +79,13 @@ shape = SubResource("CapsuleShape3D_gon6y")
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, -0.084)
 shape = SubResource("CapsuleShape3D_gon6y")
 
-<<<<<<< HEAD
-=======
+==== BASE ====
 [node name="XRHandModifier3D" type="XRHandModifier3D" parent="XROrigin3D/right_controller/RightHandHumanoid2/RightHandHumanoid/Skeleton3D" index="0"]
 hand_tracker = &"/user/hand_tracker/right"
 
 [node name="RightHandHumanoidMesh" parent="XROrigin3D/right_controller/RightHandHumanoid2/RightHandHumanoid/Skeleton3D" index="1"]
 surface_material_override/0 = ExtResource("12_7q23v")
 
-[node name="FunctionPointer" parent="XROrigin3D/right_controller" instance=ExtResource("14_pointer")]
-
->>>>>>> 59f7c033e82b50d49ef2192ce2b7a59dc6d98919
+==== BASE ====
 [editable path="XROrigin3D/left_controller/LeftHandHumanoid2"]
 [editable path="XROrigin3D/right_controller/RightHandHumanoid2"]
