@@ -3,12 +3,12 @@
 [ext_resource type="PackedScene" uid="uid://188s15j7sbd7" path="res://solarity/planet_base.tscn" id="1_g6wjm"]
 [ext_resource type="Script" uid="uid://bef8ka4d44bwl" path="res://solarity/planet_earth.gd" id="2_mw8wo"]
 [ext_resource type="Shader" uid="uid://btdpi5v1p0sfa" path="res://solarity/atmosphere.tres" id="2_ne8yk"]
+[ext_resource type="Texture2D" uid="uid://c7eh32k1mnqhk" path="res://solarity/cloud_textures/2k_earth_clouds.jpg" id="3_3tjso"]
 [ext_resource type="Texture2D" uid="uid://c12nbg5emql4b" path="res://solarity/2k_earth_daymap.jpg" id="3_oyypb"]
-[ext_resource type="Texture2D" uid="uid://b0xae7tex347i" path="res://solarity/2k_earth_normal_map.jpeg" id="4_3tjso"]
 [ext_resource type="Texture2D" uid="uid://c41q3jhtp2skr" path="res://solarity/2k_earth_nightmap.jpg" id="4_oyypb"]
-[ext_resource type="Texture2D" uid="uid://dgchg68yfy8al" path="res://solarity/cloud_textures/Cloud_0028.jpg" id="7_3tjso"]
+[ext_resource type="Texture2D" uid="uid://b0xae7tex347i" path="res://solarity/2k_earth_normal_map.jpeg" id="5_3tjso"]
 
-[sub_resource type="Shader" id="Shader_yybxh"]
+[sub_resource type="Shader" id="Shader_oyypb"]
 code = "
 shader_type spatial;
 
@@ -28,18 +28,18 @@ void fragment() {
 }
 "
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_yfej3"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3tjso"]
 render_priority = 0
-shader = SubResource("Shader_yybxh")
+shader = SubResource("Shader_oyypb")
 shader_parameter/day_tex = ExtResource("3_oyypb")
 shader_parameter/night_tex = ExtResource("4_oyypb")
 shader_parameter/sun_dir = Vector3(1, 0, 0)
 
-[sub_resource type="SphereMesh" id="SphereMesh_vhjpx"]
+[sub_resource type="SphereMesh" id="SphereMesh_yybxh"]
 radius = 1.0
 height = 2.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_21m8p"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yfej3"]
 render_priority = 0
 shader = ExtResource("2_ne8yk")
 shader_parameter/atmosphere_base_color = Vector3(0.5, 0.7, 1)
@@ -47,57 +47,55 @@ shader_parameter/falloff = 3.0
 shader_parameter/alpha_multiplier = 0.7
 shader_parameter/intensity = 1.0
 
-[sub_resource type="SphereMesh" id="SphereMesh_psu4f"]
+[sub_resource type="SphereMesh" id="SphereMesh_vhjpx"]
 radius = 1.1
 height = 2.2
 radial_segments = 32
 rings = 16
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oekfj"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_21m8p"]
 transparency = 1
 cull_mode = 2
-albedo_color = Color(1, 1, 1, 0.5)
-albedo_texture = ExtResource("7_3tjso")
+albedo_color = Color(1, 1, 1, 0.2)
+albedo_texture = ExtResource("3_3tjso")
 
-[sub_resource type="SphereMesh" id="SphereMesh_im01i"]
+[sub_resource type="SphereMesh" id="SphereMesh_psu4f"]
 radius = 1.05
 height = 2.1
 
-[node name="Planet" instance=ExtResource("1_g6wjm")]
+[node name="Earth" instance=ExtResource("1_g6wjm")]
 script = ExtResource("2_mw8wo")
 day_texture = ExtResource("3_oyypb")
 night_texture = ExtResource("4_oyypb")
 sun_direction = Vector3(1, 0, 0)
 planet_name = "Earth"
 has_clouds = true
-normal_map = ExtResource("4_3tjso")
+normal_map = ExtResource("5_3tjso")
 use_procedural_surface = false
 surface_type = 0
 land_color = Color(0.2, 0.5, 0.1, 1)
 water_color = Color(0.1, 0.3, 0.6, 1)
-noise_scale = 10.0
+noise_scale = 5.0
 noise_seed = 0
-land_threshold = 1.0
-cloud_textures_folder = "res://solarity/cloud_textures"
-use_random_cloud_texture = true
-cloud_texture_index = 5
-cloud_count = null
-cloud_size_min = null
-cloud_size_max = null
+land_threshold = 0.3
+cloud_texture = ExtResource("3_3tjso")
+cloud_texture_scale = Vector2(1, 1)
+auto_scale_cloud_texture = true
+cloud_opacity = 0.2
 
 [node name="RotationPivot" parent="." index="0"]
-transform = Transform3D(0.39083594, 0, -0.92135763, 0, 1, 0, 0.92135763, 0, 0.39083594, 0, 0, 0)
+transform = Transform3D(0.9787353, 0, 0.2104779, 0, 1, 0, -0.2104779, 0, 0.9787353, 0, 0, 0)
 
 [node name="PlanetBody" parent="RotationPivot" index="0"]
+material_override = SubResource("ShaderMaterial_3tjso")
+mesh = SubResource("SphereMesh_yybxh")
+
+[node name="Atmosphere" parent="." index="1"]
 material_override = SubResource("ShaderMaterial_yfej3")
 mesh = SubResource("SphereMesh_vhjpx")
 
-[node name="Atmosphere" parent="." index="1"]
-material_override = SubResource("ShaderMaterial_21m8p")
-mesh = SubResource("SphereMesh_psu4f")
-
 [node name="Clouds" parent="." index="2"]
-transform = Transform3D(-0.92923635, 0, 0.37058738, 0, 1, 0, -0.37058738, 0, -0.92923635, 0, 0, 0)
+transform = Transform3D(0.3738016, 0, -0.92801476, 0, 1, 0, 0.92801476, 0, 0.3738016, 0, 0, 0)
 visible = true
-material_override = SubResource("StandardMaterial3D_oekfj")
-mesh = SubResource("SphereMesh_im01i")
+material_override = SubResource("StandardMaterial3D_21m8p")
+mesh = SubResource("SphereMesh_psu4f")

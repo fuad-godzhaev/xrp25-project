@@ -123,6 +123,7 @@ func _on_openxr_stopping() -> void:
 		get_tree().quit()
 
 var passthrough_enabled: bool = false
+#var xr_interface: bool = false
 
 @onready var world_environment: WorldEnvironment = $"../WorldEnvironment"
 
@@ -134,11 +135,12 @@ func _on_openxr_pose_recentered() -> void:
 	
 func enable_passthrough() -> bool:
 	if xr_interface and xr_interface.is_passthrough_supported():		
-		return xr_interface.start_passthrough()
+		#return xr_interface.start_passthrough()
+		return false
 	else:
-		var modes = xr_interface.get_supported_environment_blend_modes()
-		if xr_interface.XR_ENV_BLEND_MODE_ALPHA_BLEND in modes:
-			xr_interface.set_environment_blend_mode(xr_interface.XR_ENV_BLEND_MODE_ALPHA_BLEND)
-			return true
-		else:
-			return false
+		#var modes = xr_interface.get_supported_environment_blend_modes()
+		#if xr_interface.XR_ENV_BLEND_MODE_ALPHA_BLEND in modes:
+		#	xr_interface.set_environment_blend_mode(xr_interface.XR_ENV_BLEND_MODE_ALPHA_BLEND)
+		#	return false
+		#else:
+		return false

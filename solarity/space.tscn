@@ -1,7 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://btwkhn6b37cpm"]
+[gd_scene load_steps=8 format=3 uid="uid://btwkhn6b37cpm"]
 
 [ext_resource type="PackedScene" uid="uid://dgde3px50kei4" path="res://solarity/Sun/Sun.tscn" id="1_dwu3q"]
 [ext_resource type="PackedScene" uid="uid://duwsb068lp2fl" path="res://player_hands.tscn" id="1_i8jsa"]
+[ext_resource type="PackedScene" uid="uid://bs5baiunqjtf1" path="res://solarity/Earth.tscn" id="3_xcaad"]
+[ext_resource type="PackedScene" uid="uid://gos8ssfanqj3" path="res://solarity/Moon.tscn" id="4_x268b"]
+[ext_resource type="PackedScene" uid="uid://02t1x6mfmrgh" path="res://solarity/Mars.tscn" id="5_46nt0"]
+[ext_resource type="PackedScene" uid="uid://dus4uwghw243g" path="res://solarity/jupiter.tscn" id="6_d5pca"]
 
 [sub_resource type="Environment" id="Environment_nrvqj"]
 background_mode = 1
@@ -17,12 +21,60 @@ glow_blend_mode = 0
 environment = SubResource("Environment_nrvqj")
 
 [node name="player_hands" parent="." instance=ExtResource("1_i8jsa")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.601799, -1291.3229)
 
 [node name="Sun" parent="." instance=ExtResource("1_dwu3q")]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Sun"]
+light_energy = 1.5
+light_color = Color(1, 0.95, 0.9, 1)
+shadow_enabled = true
 
 [node name="OmniLight3D" type="OmniLight3D" parent="Sun"]
 light_energy = 10.0
 shadow_enabled = true
-omni_range = 100.0
+distance_fade_begin = 1500.0
+omni_range = 2000.0
 omni_attenuation = 2.0
+
+[node name="Earth" parent="." node_paths=PackedStringArray("orbital_center") instance=ExtResource("3_xcaad")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 570.812, 0, 821.0808)
+sun_direction = Vector3(0, 0, 0)
+planet_radius = 6.378
+rotation_speed = 10.0
+axial_tilt = 23.4
+orbital_radius = 1000.0
+orbital_speed = 4.0
+orbital_center = NodePath("../Sun")
+cloud_opacity = 0.1
+
+[node name="Moon" parent="." node_paths=PackedStringArray("orbital_center") instance=ExtResource("4_x268b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 569.4895, 0, 822.5812)
+planet_radius = 1.737
+has_atmosphere = false
+rotation_speed = 5.0
+orbital_radius = 2.0
+orbital_speed = 3.0
+orbital_center = NodePath("../Earth")
+use_procedural_surface = true
+land_color = Color(1, 1, 1, 1)
+water_color = Color(1, 1, 1, 1)
+noise_scale = 10.0
+
+[node name="Mars" parent="." node_paths=PackedStringArray("orbital_center") instance=ExtResource("5_46nt0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1120.232, 0, -430.20938)
+planet_radius = 3.396
+rotation_speed = 5.0
+axial_tilt = 25.0
+orbital_radius = 1200.0
+orbital_speed = 5.0
+orbital_center = NodePath("../Sun")
+
+[node name="Jupiter" parent="." node_paths=PackedStringArray("orbital_center") instance=ExtResource("6_d5pca")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1114.4164, 0, -1004.0299)
+planet_radius = 71.492
+rotation_speed = 5.0
+axial_tilt = 3.0
+orbital_radius = 1500.0
+orbital_center = NodePath("../Sun")

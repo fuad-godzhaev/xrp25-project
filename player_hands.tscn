@@ -46,22 +46,28 @@ shape = SubResource("CapsuleShape3D_gon6y")
 
 [node name="LeftHandHumanoid2" parent="XROrigin3D/left_controller" instance=ExtResource("11_54xha")]
 
+[node name="LeftHandHumanoidMesh" parent="XROrigin3D/left_controller/LeftHandHumanoid2/LeftHandHumanoid/Skeleton3D" index="0"]
+surface_material_override/0 = ExtResource("12_7q23v")
+
+[node name="XRHandModifier3D" type="XRHandModifier3D" parent="XROrigin3D/left_controller/LeftHandHumanoid2/LeftHandHumanoid/Skeleton3D" index="1"]
+
 [node name="left_hand" type="Area3D" parent="XROrigin3D/left_controller/LeftHandHumanoid2"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="XROrigin3D/left_controller/LeftHandHumanoid2/left_hand"]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, -0.08376597)
 shape = SubResource("CapsuleShape3D_gon6y")
 
-[node name="LeftHandHumanoidMesh" parent="XROrigin3D/left_controller/LeftHandHumanoid2/LeftHandHumanoid/Skeleton3D" index="0"]
-surface_material_override/0 = ExtResource("12_7q23v")
-
-[node name="XRHandModifier3D" type="XRHandModifier3D" parent="XROrigin3D/left_controller/LeftHandHumanoid2/LeftHandHumanoid/Skeleton3D" index="1"]
-
 [node name="right_controller" type="XRController3D" parent="XROrigin3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2281102, 0, 0)
 tracker = &"right_hand"
 
 [node name="RightHandHumanoid2" parent="XROrigin3D/right_controller" instance=ExtResource("13_y65lw")]
+
+[node name="XRHandModifier3D" type="XRHandModifier3D" parent="XROrigin3D/right_controller/RightHandHumanoid2/RightHandHumanoid/Skeleton3D" index="0"]
+hand_tracker = &"/user/hand_tracker/right"
+
+[node name="RightHandHumanoidMesh" parent="XROrigin3D/right_controller/RightHandHumanoid2/RightHandHumanoid/Skeleton3D" index="1"]
+surface_material_override/0 = ExtResource("12_7q23v")
 
 [node name="collider" type="CharacterBody3D" parent="XROrigin3D/right_controller/RightHandHumanoid2"]
 
@@ -74,12 +80,6 @@ shape = SubResource("CapsuleShape3D_gon6y")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="XROrigin3D/right_controller/RightHandHumanoid2/right_hand"]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, -0.084)
 shape = SubResource("CapsuleShape3D_gon6y")
-
-[node name="XRHandModifier3D" type="XRHandModifier3D" parent="XROrigin3D/right_controller/RightHandHumanoid2/RightHandHumanoid/Skeleton3D" index="0"]
-hand_tracker = &"/user/hand_tracker/right"
-
-[node name="RightHandHumanoidMesh" parent="XROrigin3D/right_controller/RightHandHumanoid2/RightHandHumanoid/Skeleton3D" index="1"]
-surface_material_override/0 = ExtResource("12_7q23v")
 
 [editable path="XROrigin3D/left_controller/LeftHandHumanoid2"]
 [editable path="XROrigin3D/right_controller/RightHandHumanoid2"]

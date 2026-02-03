@@ -45,14 +45,26 @@ uniform sampler2D night_tex : source_color;
 uniform vec3 sun_dir = vec3(1.0, 0.0, 0.0);
 
 void fragment() {
-	vec3 normal = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
-	float sun_amount = dot(normal, normalize(sun_dir));
-	float mix_factor = smoothstep(-0.1, 0.1, sun_amount);
-
 	vec3 day_col = texture(day_tex, UV).rgb;
 	vec3 night_col = texture(night_tex, UV).rgb;
 
-	ALBEDO = mix(night_col, day_col, mix_factor);
+	// Set albedo to day texture for lighting calculations
+	ALBEDO = day_col;
+}
+
+void light() {
+	// Calculate day/night transition based on light direction
+	float NdotL = dot(NORMAL, LIGHT);
+	float day_night_mix = smoothstep(-0.1, 0.1, NdotL);
+
+	// Mix between day and night textures
+	vec3 day_col = ALBEDO;
+	vec3 night_col = texture(night_tex, UV).rgb;
+	vec3 surface_color = mix(night_col, day_col, day_night_mix);
+
+	// Apply diffuse lighting
+	float diffuse = max(NdotL, 0.0);
+	DIFFUSE_LIGHT += surface_color * LIGHT_COLOR * ATTENUATION * diffuse;
 }
 """
 
