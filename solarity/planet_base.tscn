@@ -25,21 +25,9 @@ rings = 16
 
 [node name="Planet" type="Node3D"]
 script = ExtResource("1_cxhl0")
-use_procedural_surface = null
-surface_type = null
-land_color = null
-water_color = null
-noise_scale = null
-noise_seed = null
-land_threshold = null
-cloud_textures_folder = null
-use_random_cloud_texture = null
-cloud_texture_index = null
-cloud_texture_scale = null
-auto_scale_cloud_texture = null
 
 [node name="RotationPivot" type="Node3D" parent="."]
-transform = Transform3D(-0.018791452, 0, -1.0000131, 0, 1, 0, 1.0000131, 0, -0.018791452, 0, 0, 0)
+transform = Transform3D(0.7762798, 0, 0.6314367, 0, 1, 0, -0.6314367, 0, 0.7762798, 0, 0, 0)
 
 [node name="PlanetBody" type="MeshInstance3D" parent="RotationPivot"]
 material_override = SubResource("StandardMaterial3D_xcf0r")

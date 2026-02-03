@@ -17,6 +17,10 @@ enum SurfaceType {
 
 ## Planet properties that can be customized per planet
 @export_group("Planet Properties")
+@export var _play_in_editor: bool = true:
+	set(value):
+		_play_in_editor = value
+		
 @export var planet_name: String = "Planet":
 	set(value):
 		planet_name = value
@@ -186,6 +190,8 @@ var rotation_pivot: Node3D
 
 var orbital_angle: float = 0.0
 var _editor_initialized: bool = false
+var _is_paused: bool = false
+var _xr_camera: XRCamera3D = null
 
 # Editor initialization and update functions
 func _ready():
@@ -460,3 +466,25 @@ func _apply_gravity():
 	var space_state = get_world_3d().direct_space_state
 	# TODO: Implement gravity pulling logic here
 	pass
+
+## Generate moons for this planet using CelestialGenerator
+func generate_moons():
+	CelestialGenerator.generate_moons(self)
+
+## Generate rings for this planet using CelestialGenerator
+func generate_rings():
+	CelestialGenerator.generate_rings(self)
+
+## Clear all generated moons
+func clear_moons():
+	var moons_container = get_node_or_null("Moons")
+	if moons_container:
+		remove_child(moons_container)
+		moons_container.queue_free()
+
+## Clear all generated rings
+func clear_rings():
+	var rings_container = get_node_or_null("Rings")
+	if rings_container:
+		remove_child(rings_container)
+		rings_container.queue_free()

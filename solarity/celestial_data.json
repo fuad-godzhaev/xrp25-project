@@ -1,0 +1,71 @@
+{
+	"moons": {
+		"Mercury": [],
+		"Venus": [],
+		"Earth": [],
+		"Mars": [
+			{"name": "Phobos", "distance": 15, "size": 0.3, "speed": 15},
+			{"name": "Deimos", "distance": 25, "size": 0.2, "speed": 8}
+		],
+		"Jupiter": [
+			{"name": "Io", "distance": 100, "size": 2.0, "speed": 12},
+			{"name": "Europa", "distance": 130, "size": 1.8, "speed": 10},
+			{"name": "Ganymede", "distance": 160, "size": 2.5, "speed": 8},
+			{"name": "Callisto", "distance": 190, "size": 2.3, "speed": 6},
+			{"name": "Amalthea", "distance": 80, "size": 0.5, "speed": 18}
+		],
+		"Saturn": [
+			{"name": "Titan", "distance": 150, "size": 2.4, "speed": 8},
+			{"name": "Rhea", "distance": 120, "size": 1.2, "speed": 10},
+			{"name": "Iapetus", "distance": 200, "size": 1.1, "speed": 5},
+			{"name": "Dione", "distance": 100, "size": 0.9, "speed": 12},
+			{"name": "Tethys", "distance": 85, "size": 0.8, "speed": 14},
+			{"name": "Enceladus", "distance": 70, "size": 0.6, "speed": 16},
+			{"name": "Mimas", "distance": 60, "size": 0.5, "speed": 18}
+		],
+		"Uranus": [
+			{"name": "Miranda", "distance": 80, "size": 0.6, "speed": 15},
+			{"name": "Ariel", "distance": 100, "size": 0.9, "speed": 12},
+			{"name": "Umbriel", "distance": 120, "size": 0.9, "speed": 10},
+			{"name": "Titania", "distance": 140, "size": 1.2, "speed": 8},
+			{"name": "Oberon", "distance": 160, "size": 1.1, "speed": 7}
+		],
+		"Neptune": [
+			{"name": "Triton", "distance": 100, "size": 2.0, "speed": 10},
+			{"name": "Proteus", "distance": 70, "size": 0.6, "speed": 14},
+			{"name": "Nereid", "distance": 180, "size": 0.4, "speed": 4}
+		],
+		"Pluto": [
+			{"name": "Charon", "distance": 15, "size": 1.0, "speed": 8}
+		]
+	},
+	"rings": {
+		"Saturn": {
+			"inner_radius": 90,
+			"outer_radius": 180,
+			"segments": 3,
+			"colors": [
+				{"r": 0.9, "g": 0.85, "b": 0.7, "a": 0.6},
+				{"r": 0.95, "g": 0.9, "b": 0.75, "a": 0.5},
+				{"r": 0.85, "g": 0.8, "b": 0.65, "a": 0.4}
+			]
+		},
+		"Uranus": {
+			"inner_radius": 60,
+			"outer_radius": 90,
+			"segments": 2,
+			"colors": [
+				{"r": 0.6, "g": 0.7, "b": 0.8, "a": 0.3},
+				{"r": 0.5, "g": 0.6, "b": 0.7, "a": 0.25}
+			]
+		},
+		"Jupiter": {
+			"inner_radius": 85,
+			"outer_radius": 95,
+			"segments": 1,
+			"colors": [
+				{"r": 0.6, "g": 0.5, "b": 0.4, "a": 0.2}
+			]
+		}
+	}
+}

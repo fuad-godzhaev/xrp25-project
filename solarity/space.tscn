@@ -16,6 +16,7 @@ glow_bloom = 0.2
 glow_blend_mode = 0
 
 [node name="Space" type="Node3D"]
+script = ExtResource("1_q1bxf")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_nrvqj")
